@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Link, useLocation, Navigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { useState, useEffect } from 'react';
 import Tracker from './pages/Tracker';
@@ -6,21 +6,27 @@ import History from './pages/History';
 
 const AppContainer = styled.div`
   min-height: 100vh;
-  background: linear-gradient(135deg, 
+  background: linear-gradient(
     #ffffff 0%,
-    #f8f8f8 20%,
     #f0f0f0 40%,
-    #e8e8e8 60%,
-    #e0e0e0 80%,
-    #d8d8d8 100%
+    #e0e0e0 70%,
+    #c0c0c0 100%
   );
   padding: 2rem;
+  
+  @media (max-width: 768px) {
+    padding: 1rem;
+  }
 `;
 
 const ContentContainer = styled.div`
   max-width: 1400px;
   margin: 0 auto;
   padding: 0 1.5rem;
+  
+  @media (max-width: 768px) {
+    padding: 0 1rem;
+  }
 `;
 
 const TopBar = styled.div`
@@ -28,18 +34,32 @@ const TopBar = styled.div`
   grid-template-columns: 200px 1fr 200px;
   align-items: center;
   margin-bottom: 2rem;
+  
+  @media (max-width: 768px) {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+  }
 `;
 
 const Title = styled.h1`
   color: #ff6b35;
   font-size: 1.2rem;
   font-weight: 600;
+  
+  @media (max-width: 768px) {
+    display: none;
+  }
 `;
 
 const Nav = styled.nav`
   display: flex;
   gap: 2.5rem;
   justify-content: center;
+  
+  @media (max-width: 768px) {
+    gap: 4rem;
+  }
 `;
 
 const NavLink = styled(Link)<{ $isActive?: boolean }>`
@@ -51,6 +71,11 @@ const NavLink = styled(Link)<{ $isActive?: boolean }>`
   
   &:hover {
     color: ${props => props.$isActive ? '#333' : '#666'};
+  }
+  
+  @media (max-width: 768px) {
+    font-size: 1.1rem;
+    padding: 0.5rem;
   }
 `;
 
@@ -76,7 +101,7 @@ const NavigationWrapper = () => {
   
   return (
     <Nav>
-      <NavLink to="/" $isActive={location.pathname === '/'}>Tracker</NavLink>
+      <NavLink to="/tracker" $isActive={location.pathname === '/tracker'}>Tracker</NavLink>
       <NavLink to="/history" $isActive={location.pathname === '/history'}>History</NavLink>
     </Nav>
   );
@@ -131,8 +156,9 @@ function App() {
             <NavigationWrapper />
           </TopBar>
           <Routes>
+            <Route path="/" element={<Navigate to="/tracker" replace />} />
             <Route 
-              path="/" 
+              path="/tracker" 
               element={
                 <Tracker 
                   onExerciseAdded={handleExerciseAdded}
@@ -148,6 +174,7 @@ function App() {
                 />
               } 
             />
+            <Route path="*" element={<Navigate to="/tracker" replace />} />
           </Routes>
         </ContentContainer>
       </AppContainer>
