@@ -85,7 +85,7 @@ const SecondRow = styled.div`
   }
 `;
 
-const DayBox = styled.div`
+const DayBox = styled.div<{ isOpen?: boolean }>`
   background: white;
   border-radius: 12px;
   padding: 1.5rem;
@@ -430,6 +430,7 @@ const Tracker: React.FC<TrackerProps> = ({ onExerciseAdded, savedExercises }) =>
     return (
       <BoxComponent 
         key={dayStr}
+        isOpen={isOpen}
         onClick={() => {
           if (isMobile) {
             setOpenDayStr(isOpen ? null : dayStr);
