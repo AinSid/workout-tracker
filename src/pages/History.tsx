@@ -11,6 +11,12 @@ const HistoryContainer = styled.div`
   grid-template-columns: repeat(4, 1fr);
   gap: 0.25rem;
   min-height: calc(100vh - 10.5rem);
+
+  @media (max-width: 768px) {
+    display: flex;
+    flex-direction: column;
+    padding-top: 0.25rem;  // Even less padding at top
+  }
 `;
 
 const WeekRow = styled.div`
@@ -23,17 +29,32 @@ const WeekRow = styled.div`
   &:last-child {
     border-bottom: none;
   }
+
+  @media (max-width: 768px) {
+    padding: 0.75rem 0;  // Increased vertical padding
+  }
 `;
 
 const WeekNumber = styled.div`
   width: 25px;
   color: #666;
   font-size: 0.8rem;
+
+  @media (max-width: 768px) {
+    width: 65px;  // Wider to accommodate "Week" text
+  }
 `;
 
 const DayBoxes = styled.div`
   display: flex;
   gap: 0.3rem;
+
+  @media (max-width: 768px) {
+    flex: 1;
+    justify-content: space-between;
+    padding-right: 0.5rem;
+    gap: 0.6rem;  // Increased gap between day boxes
+  }
 `;
 
 const DayBox = styled.div<{ isCompleted: boolean }>`
@@ -55,10 +76,14 @@ const DayBox = styled.div<{ isCompleted: boolean }>`
 `;
 
 const Title = styled.h1`
-  font-size: 1.5rem;
+  font-size: 1.4rem;
   color: #333;
   margin-bottom: 1.5rem;
   grid-column: 1 / -1;
+  
+  @media (max-width: 768px) {
+    display: none;
+  }
 `;
 
 interface CompletedWorkout {
@@ -110,6 +135,8 @@ const History: React.FC<HistoryProps> = ({ completedDates = [] }) => {
     }));
   };
 
+  const isMobile = window.innerWidth <= 768;
+  
   const weekChunks = [
     weeks.slice(0, 13),
     weeks.slice(13, 26),
@@ -119,30 +146,54 @@ const History: React.FC<HistoryProps> = ({ completedDates = [] }) => {
 
   return (
     <HistoryContainer>
-      <Title>Workout History (weeks)</Title>
-      {weekChunks.map((chunk, columnIndex) => (
-        <div key={columnIndex}>
-          {chunk.map((week, i) => (
-            <WeekRow key={i}>
-              <WeekNumber>{i + 1 + columnIndex * 13}</WeekNumber>
-              <DayBoxes>
-                {week.map(day => {
-                  const dateStr = format(day, 'yyyy-MM-dd');
-                  return (
-                    <DayBox
-                      key={dateStr}
-                      isCompleted={completedWorkouts[dateStr]}
-                      onClick={() => toggleDay(dateStr)}
-                    >
-                      {format(day, 'E')[0]}
-                    </DayBox>
-                  );
-                })}
-              </DayBoxes>
-            </WeekRow>
-          ))}
-        </div>
-      ))}
+      <Title>Workout History{!isMobile && " (weeks)"}</Title>
+      {isMobile ? (
+        // Mobile view - single column with "Week X"
+        weeks.map((week, i) => (
+          <WeekRow key={i}>
+            <WeekNumber>Week {i + 1}</WeekNumber>
+            <DayBoxes>
+              {week.map(day => {
+                const dateStr = format(day, 'yyyy-MM-dd');
+                return (
+                  <DayBox
+                    key={dateStr}
+                    isCompleted={completedWorkouts[dateStr]}
+                    onClick={() => toggleDay(dateStr)}
+                  >
+                    {format(day, 'E')[0]}
+                  </DayBox>
+                );
+              })}
+            </DayBoxes>
+          </WeekRow>
+        ))
+      ) : (
+        // Desktop view - 4 columns with numbers only
+        weekChunks.map((chunk, columnIndex) => (
+          <div key={columnIndex}>
+            {chunk.map((week, i) => (
+              <WeekRow key={i}>
+                <WeekNumber>{i + 1 + columnIndex * 13}</WeekNumber>
+                <DayBoxes>
+                  {week.map(day => {
+                    const dateStr = format(day, 'yyyy-MM-dd');
+                    return (
+                      <DayBox
+                        key={dateStr}
+                        isCompleted={completedWorkouts[dateStr]}
+                        onClick={() => toggleDay(dateStr)}
+                      >
+                        {format(day, 'E')[0]}
+                      </DayBox>
+                    );
+                  })}
+                </DayBoxes>
+              </WeekRow>
+            ))}
+          </div>
+        ))
+      )}
     </HistoryContainer>
   );
 };
