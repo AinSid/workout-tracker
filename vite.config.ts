@@ -8,5 +8,5 @@ export default defineConfig({
     host: true,
     historyApiFallback: true
   },
-  base: '/'
+  base: './'
 }) 
