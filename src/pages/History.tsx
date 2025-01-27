@@ -16,7 +16,7 @@ const HistoryContainer = styled.div`
     display: flex;
     flex-direction: column;
     padding-top: 0.25rem;
-    height: 640px;  // Fixed height to match Tracker page height
+    height: 540px;  // Reduced from 640px to show ~11 weeks
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
   }
