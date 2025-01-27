@@ -319,11 +319,14 @@ const Tracker: React.FC<TrackerProps> = ({ onExerciseAdded, savedExercises }) =>
     field: null,
     values: { name: '', weight: '', sets: '', reps: '' }
   });
-  const [selectedWeek, setSelectedWeek] = useState(new Date());
+  const [selectedWeek, setSelectedWeek] = useState(() => {
+    const today = new Date();
+    const monday = startOfWeek(today, { weekStartsOn: 1 });
+    return monday;
+  });
   const [openDayStr, setOpenDayStr] = useState<string | null>(() => {
-    // Set Monday as default open day on mobile
-    const monday = startOfWeek(new Date(), { weekStartsOn: 1 });
-    return format(monday, 'yyyy-MM-dd');
+    const today = new Date();
+    return format(today, 'yyyy-MM-dd');
   });
   
   const weekStart = startOfWeek(selectedWeek, { weekStartsOn: 1 });
