@@ -15,7 +15,10 @@ const HistoryContainer = styled.div`
   @media (max-width: 768px) {
     display: flex;
     flex-direction: column;
-    padding-top: 0.25rem;  // Even less padding at top
+    padding-top: 0.25rem;
+    height: 640px;  // Fixed height to match Tracker page height
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
   }
 `;
 
